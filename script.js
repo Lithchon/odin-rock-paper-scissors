@@ -24,6 +24,11 @@ function playRound(playerSelection, computerSelection) {
     const compIdx = pool.indexOf(computerSelection);
     let result;
 
+    if (userIdx == -1) {
+        result = "Invalid Input! " + "Your input should be Rock, Paper or Scissors";
+        return result;
+    }
+
     if (userIdx == compIdx) {
         result = "Tie!"
     }

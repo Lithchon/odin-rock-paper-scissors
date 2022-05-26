@@ -1,3 +1,10 @@
+let playerScore = 0; 
+let computerScore = 0;
+const roundText = document.querySelector('.round-info');
+const playerScoreText = document.getElementById('player-score');
+const computerScoreText = document.getElementById('computer-score');
+const playerSign = document.getElementById('player-sign');
+const computerSign = document.getElementById('computer-sign');
 
 
 function computerPlay() {
@@ -24,47 +31,91 @@ function playRound(playerSelection, computerSelection) {
     const compIdx = pool.indexOf(computerSelection);
     let result;
 
-    if (userIdx == -1) {
-        result = "Invalid Input! " + "Your input should be Rock, Paper or Scissors";
-        return result;
-    }
-
     if (userIdx == compIdx) {
-        result = "Tie!"
+        result = 'tie';
     }
     else if (Math.abs(userIdx - compIdx) == 1) {
         if (userIdx > compIdx) {
-            result = "You Win! " + playerSelection + " beats " + computerSelection
+            result = 'player';
+            playerScore++;
         }
         else {
-            result = "You Lose! " + computerSelection + " beats " + playerSelection
+            result = 'computer';
+            computerScore++;
         }
     }
     else {
         if (userIdx < compIdx) {
-            result = "You Win! " + playerSelection + " beats " + computerSelection
+            result = 'player';
+            playerScore++;
         }
         else {
-            result = "You Lose! " + computerSelection + " beats " + playerSelection
+            result = 'computer';
+            computerScore++;
         }
     }
+    console.log(result);
+    updateScoreBoard(playerSelection, computerSelection);
 
-    return result;
+    return;
 }
 
-function game() {
-    let playerSelection, result, computerSelection;
+function updateScoreBoard(playerSelection, computerSelection) {
 
-    for (let i = 0; i < 5; i++) {
-        playerSelection = prompt("Enter your selection: ")
-        playerSelection = playerSelection.charAt(0).toUpperCase() + playerSelection.substring(1).toLowerCase();
+    updateSign(playerSelection, playerSign);
+    updateSign(computerSelection, computerSign);
 
-        computerSelection = computerPlay();
+    playerScoreText.textContent = `Player: ${playerScore}`;
+    computerScoreText.textContent = `Computer: ${computerScore}`;
 
-        result = playRound(playerSelection, computerSelection);
-        console.log(result);
+
+
+    // scoreboardhelper func
+}
+
+function updateSign(selectedSign, fieldToUpdate) {
+
+    switch (selectedSign) {
+        case 'Rock':
+            fieldToUpdate.textContent = '✊';
+            return;
+        case 'Paper':
+            fieldToUpdate.textContent = '✋';
+            return;
+        default:
+            fieldToUpdate.textContent = '✌️';
+            return;
+    };
+}
+
+function gameOverCheck() {
+    if (!(playerScore === 5 || computerScore === 5)) {
+        return;
     }
-
+    resetGamePopUp();
 }
 
-game();
+const selectionPool = document.querySelectorAll('.player-selection');
+// console.log(playPool);
+
+selectionPool.forEach(choice => {
+    choice.addEventListener("click", function(){
+        let computerSelection = computerPlay();
+        let playerSelection, result, winnerText;
+        if (choice.classList.contains('rock')) {
+            playerSelection = 'Rock';
+        }
+        else if (choice.classList.contains('paper')) {
+            playerSelection = 'Paper';
+        }
+        else {
+            playerSelection = 'Scissors';
+        };
+
+        playRound(playerSelection, computerSelection);
+        gameOverCheck();
+    });
+});
+
+
+// game();
